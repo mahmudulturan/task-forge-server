@@ -44,12 +44,29 @@ async function run() {
         })
 
 
+
+        //to get tasks
+        app.get('/get-tasks/:email', async (req, res) => {
+            const progressKey = req.query.progressKey;
+            const email = req.params.email;
+            let query = { email: email }
+            if (progressKey) {
+                query.progress = progressKey;
+            }
+            const result = await tasksCollection.find(query).toArray()
+            res.send(result)
+        })
+
+
+
         //to save new Task
         app.post('/create-task', async (req, res) => {
             const taskDetails = req.body;
             const result = await tasksCollection.insertOne(taskDetails);
             res.send(result);
         })
+
+
 
 
 
