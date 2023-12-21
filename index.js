@@ -27,18 +27,27 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
         const usersCollection = client.db("taskForgeDB").collection("userCollection")
-        
-    //users related endpoints
+        const tasksCollection = client.db("taskForgeDB").collection("taskCollection")
+
+        //users related endpoints
 
         //to save an new user info
-        app.put('/users', async(req, res)=>{
+        app.put('/users', async (req, res) => {
             const userData = req.body;
-            const filter = {email : userData.email};
+            const filter = { email: userData.email };
             const findUser = await usersCollection.findOne(filter)
-            if(findUser){
-                return res.send({message: "user found"})
+            if (findUser) {
+                return res.send({ message: "user found" })
             }
             const result = await usersCollection.insertOne(userData)
+            res.send(result);
+        })
+
+
+        //to save new Task
+        app.post('/create-task', async (req, res) => {
+            const taskDetails = req.body;
+            const result = await tasksCollection.insertOne(taskDetails);
             res.send(result);
         })
 
